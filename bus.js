@@ -1,6 +1,37 @@
 import axios from 'axios';
 import jsSHA from 'jssha';
-import StyleSheetValidation from 'react-native/Libraries/StyleSheet/StyleSheetValidation';
+import url from 'url';
+import StyleSheetValidation from 'react-native/Libraries/StyleSheet/StyleSheetValidation'; // if unused module, delete it
+
+const APIBASE = "https://ptx.transportdata.tw/MOTC/v2/Bus/EstimatedTimeOfArrival/City/Taoyuan";
+
+const getRoutes = ( parame ) => {
+	let vaildBusID = [
+		1320, 1321, 1330,
+		1331, 1720, 1721,
+		1730, 1731
+	];	
+	let bus_id = parseInt(parame.id);
+	let data = {
+		"$select":  parame.select || "StopStatus",
+		"$filter":  parame.filter || "Direction",
+		"$orderby": parame.order  || "StopSequence",
+		"$format":  parame.format || "JSON",
+	}
+
+	if( vaildBusID.indexOf( bus_id ) === -1 ) {
+		return { error: "Invalid bus id" };
+	}
+	
+	let URL = url.parse( `${APIBASE}/${bus_id}`, true );
+	for( let k in data ) {
+		let v = data[k];
+		// if ( vaild checking ){
+		URL.query[k] = v;
+		// }
+	}
+	return { url: url.format( URL ) };
+}
 
 const getAuthorizationHeader = function() {
 	var AppID = 'e05be185a29147f7b37c4343bedae576';
