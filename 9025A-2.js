@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
   },
 });
 const Separator = () => <View style={styles.separator} />;
-function List9025A({ navigation }) {
+function List9025A2({ navigation }) {
   return (
   <SafeAreaView style={styles.background}>
     <View>
@@ -178,4 +178,4 @@ function List9025A({ navigation }) {
     
   </SafeAreaView>
 );}
-export default List9025A;
+export default List9025A2;

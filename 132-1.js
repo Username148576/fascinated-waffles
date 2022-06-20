@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect} from 'react';
 import {
   StyleSheet,
   View,
@@ -6,7 +6,9 @@ import {
   Text,
   Alert,
   TouchableOpacity,
+  RefreshControl,
 } from 'react-native';
+import BusController from './bus';
 
 const styles = StyleSheet.create({
   background: {
@@ -27,16 +29,58 @@ const styles = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
 });
+
 const Separator = () => <View style={styles.separator} />;
 function Bus132({ navigation }) {
+
+  const [item, setItems] = useState([]);
+
+  const [start, setStart] = useState(true);
+
+  const [direction,setDirection] = useState(1);
+
+  const [refreshing, setRefreshing] = useState(false);
+
+
+  const onRefresh = () => {
+      setRefreshing(true);
+      BusController.route(1321).then((res) => {
+        setItems(res);
+        console.log();
+        setRefreshing(false);
+      });
+  };
+
+  const onRefresh1 = () => {
+    setRefreshing(true);
+    BusController.route(1320).then((res) => {
+      setItems(res);
+      setRefreshing(false);
+    });
+};
+
+  useEffect(() => {
+    if(start){
+      setStart(false);
+      if(direction==1)onRefresh();
+      else onRefresh1();
+    }
+    var id;
+    if(direction==1)id=setInterval(onRefresh,10000);
+    else id=setInterval(onRefresh1,10000)
+    return () => {
+      clearInterval(id);
+    }
+  },[start]);
+
   return (
-  <SafeAreaView style={styles.background}>
+  <SafeAreaView style={styles.background} refreshControl={(<RefreshControl  refreshing={refreshing} onRefresh={onRefresh} />)}>
     <View>
       <Text style={{ textAlign: 'center', backgroundColor: 'skyblue' }}>
         132
       </Text>
       <TouchableOpacity
-        onPress={() => navigation.navigate('List132')}
+        onPress={() => {navigation.navigate('List132')}}
         style={{
           width: '40%',
           backgroundColor: 'yellow',
@@ -46,7 +90,7 @@ function Bus132({ navigation }) {
         <Text style={styles.title}>發車時刻表</Text>
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={() =>navigation.navigate('Home')}
+        onPress={() =>{navigation.navigate('Home')}}
         style={{
           width: '30%',
           backgroundColor: '',
@@ -61,14 +105,14 @@ function Bus132({ navigation }) {
     <View>
       <View style={styles.fixToText}>
         <TouchableOpacity
-          onPress={() => Alert.alert('Left button pressed')}
+          onPress={() => {setStart(true);setDirection(0)}}
           style={{ width: '50%', backgroundColor: 'white' }}>
           <Text style={styles.title}>
             往中央大學
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => Alert.alert('Left button pressed')}
+          onPress={() => {setStart(true);setDirection(1)}}
           style={{ width: '50%', backgroundColor: 'white' }}>
           <Text style={styles.title}>
             往中壢公車站
@@ -76,69 +120,21 @@ function Bus132({ navigation }) {
         </TouchableOpacity>
       </View>
     </View>
-    <Separator />
-    <View style={styles.fixToText}>
-      
-        <Text style={{textAlign: 'center',width: '50%', backgroundColor: 'white' }}>
-          16:00 
-        </Text>
-        <Text style={ {textAlign: 'center',width: '50%', backgroundColor: 'white' }}>中壢公車站</Text>
-
-    </View>
-    <Separator />
-    <View style={styles.fixToText}>
-      
-        <Text style={{textAlign: 'center',width: '50%', backgroundColor: 'white' }}>
-          16:00 
-        </Text>
-        <Text style={ {textAlign: 'center',width: '50%', backgroundColor: 'white' }}>第一銀行</Text>
-
-    </View>
-    <Separator />
-    <View style={styles.fixToText}>
-      
-        <Text style={{textAlign: 'center',width: '50%', backgroundColor: 'white' }}>
-          16:01
-        </Text>
-        <Text style={ {textAlign: 'center',width: '50%', backgroundColor: 'white' }}>第一市場</Text>
-
-    </View>
-    <Separator />
-    <View style={styles.fixToText}>
-      
-        <Text style={{textAlign: 'center',width: '50%', backgroundColor: 'white' }}>
-          16:02
-        </Text>
-        <Text style={ {textAlign: 'center',width: '50%', backgroundColor: 'white' }}>河川教育中心</Text>
-
-    </View>
-    <Separator />
-    <View style={styles.fixToText}>
-      
-        <Text style={{textAlign: 'center',width: '50%', backgroundColor: 'white' }}>
-          16:02
-        </Text>
-        <Text style={ {textAlign: 'center',width: '50%', backgroundColor: 'white' }}>舊社</Text>
-
-    </View>
-    <Separator />
-    <View style={styles.fixToText}>
-      
-        <Text style={{textAlign: 'center',width: '50%', backgroundColor: 'white' }}>
-          16:04 
-        </Text>
-        <Text style={ {textAlign: 'center',width: '50%', backgroundColor: 'white' }}>新民國中</Text>
-
-    </View>
-    <Separator />
-    <View style={styles.fixToText}>
-      
-        <Text style={{textAlign: 'center',width: '50%', backgroundColor: 'white' }}>
-          16:04 
-        </Text>
-        <Text style={ {textAlign: 'center',width: '50%', backgroundColor: 'white' }}>廣興</Text>
-
-    </View>
+    
+    { item.map((data) => (
+        <View>
+          <Separator />
+          <View style={styles.fixToText}>
+          
+            <Text style={{textAlign: 'center',width: '50%', backgroundColor: 'white' }}>
+              {data.time} 
+            </Text>
+            <Text style={ {textAlign: 'center',width: '50%', backgroundColor: 'white' }}>{data.state}</Text>
+  
+          </View>
+        </View>
+          
+      ))}
     <Separator />
   </SafeAreaView>
 );}

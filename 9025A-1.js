@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   },
 });
 const Separator = () => <View style={styles.separator} />;
-function Bus9025A({ navigation }) {
+function Bus9025A1({ navigation }) {
   return (
   <SafeAreaView style={styles.background}>
     <View>
@@ -143,4 +143,4 @@ function Bus9025A({ navigation }) {
   </SafeAreaView>
 );}
 
-export default Bus9025A;
+export default Bus9025A1;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect} from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { CreateStackNavigator } from '@react-navigation/stack';
 import {
@@ -9,7 +9,9 @@ import {
   Text,
   Alert,
   TouchableOpacity,
+  RefreshControl,
 } from 'react-native';
+import BusController from './bus';
 
 const styles = StyleSheet.create({
   container: {
@@ -38,8 +40,33 @@ const styles = StyleSheet.create({
 });
 const Separator = () => <View style={styles.separator} />;
 function First({ navigation }) {
+  
+  const [item, setItems] = useState([]);
+
+  const [start, setStart] = useState(true);
+
+  const [refreshing, setRefreshing] = useState(false);
+
+
+  const onRefresh = () => {
+      setRefreshing(true);
+      BusController.state(1).then((res) => {
+        setItems(res);
+        setRefreshing(false);
+      });
+  };
+  useEffect(() => {
+    if(start){
+      setStart(false);
+      onRefresh();
+    }
+    const id=setInterval(onRefresh,10000);
+    return () => {
+      clearInterval(id);
+    }
+  },[start]);
   return (
-  <SafeAreaView style={styles.background}>
+    <SafeAreaView style={styles.background} refreshControl={(<RefreshControl  refreshing={refreshing} onRefresh={onRefresh} />)}>
     <ScrollView style={styles.scrollView}>
     <View>
       <Text style={{ textAlign: 'center', backgroundColor: 'skyblue' }}>
@@ -57,7 +84,7 @@ function First({ navigation }) {
       </TouchableOpacity>
     </View>
     <Separator />
-
+    
     <View>
       <View style={styles.fixToText}>
         <TouchableOpacity
@@ -77,133 +104,42 @@ function First({ navigation }) {
       </View>
     </View>
     <Separator />
-    <View>
-      <TouchableOpacity
-        onPress={() => navigation.navigate('Bus132')}
-        style={{ width: '100%', backgroundColor: 'white' }}>
-        <Text style={{textAlign: 'left'}}>
-        132                            警衛室|3min
-        </Text>
-        <Text style={styles.title}>往中壢公車站</Text>
+    {item.map((res)=>(
+      <View>
+        <View>
         <TouchableOpacity
-          onPress={() => Alert.alert('Left button pressed')}
-          style={{
-            width: '10%',
-            backgroundColor: 'white',
-            position: 'absolute',
-            right: 20,
-          }}>
-          <Text style={styles.title}>心</Text>
+          onPress={() => navigation.navigate('Bus'+res.state)}
+          style={{ width: '100%', backgroundColor: 'white' }}>
+          <Text style={{textAlign: 'left'}}>
+          {res.state}                          警衛室|{res.time}
+          </Text>
+          <Text style={styles.title}>{'\n'}</Text>
+          <TouchableOpacity
+            onPress={() => Alert.alert('Left button pressed')}
+            style={{
+              width: '10%',
+              backgroundColor: 'white',
+              position: 'absolute',
+              right: 20,
+            }}>
+            <Text style={styles.title}>心</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => Alert.alert('Left button pressed')}
+            style={{
+              width: '10%',
+              backgroundColor: 'white',
+              position: 'absolute',
+              right: 20,
+              bottom: 0,
+            }}>
+            <Text style={styles.title}>加</Text>
+          </TouchableOpacity>
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => Alert.alert('Left button pressed')}
-          style={{
-            width: '10%',
-            backgroundColor: 'white',
-            position: 'absolute',
-            right: 20,
-            bottom: 0,
-          }}>
-          <Text style={styles.title}>加</Text>
-        </TouchableOpacity>
-      </TouchableOpacity>
+      </View>
+      <Separator />
     </View>
-    <Separator />
-    <View>
-      <TouchableOpacity
-        onPress={() => navigation.navigate('Bus172')}
-        style={{ width: '100%', backgroundColor: 'white' }}>
-        <Text style={{textAlign: 'left'}}>
-          172                            警衛室|3min
-        </Text>
-        <Text style={styles.title}>往桃園高鐵站</Text>
-        <TouchableOpacity
-          onPress={() => Alert.alert('Left button pressed')}
-          style={{
-            width: '10%',
-            backgroundColor: 'white',
-            position: 'absolute',
-            right: 20,
-          }}>
-          <Text style={styles.title}>心</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => Alert.alert('Left button pressed')}
-          style={{
-            width: '10%',
-            backgroundColor: 'white',
-            position: 'absolute',
-            right: 20,
-            bottom: 0,
-          }}>
-          <Text style={styles.title}>加</Text>
-        </TouchableOpacity>
-      </TouchableOpacity>
-    </View>
-    <Separator />
-    <View>
-      <TouchableOpacity
-        onPress={() => navigation.navigate('Bus9025A')}
-        style={{ width: '100%', backgroundColor: 'white' }}>
-        <Text style={{textAlign: 'left'}}>
-          9025                          警衛室|3min
-        </Text>
-        <Text style={styles.title}>往松山機場  </Text>
-        <TouchableOpacity
-          onPress={() => Alert.alert('Left button pressed')}
-          style={{
-            width: '10%',
-            backgroundColor: 'white',
-            position: 'absolute',
-            right: 20,
-          }}>
-          <Text style={styles.title}>心</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => Alert.alert('Left button pressed')}
-          style={{
-            width: '10%',
-            backgroundColor: 'white',
-            position: 'absolute',
-            right: 20,
-            bottom: 0,
-          }}>
-          <Text style={styles.title}>加</Text>
-        </TouchableOpacity>
-      </TouchableOpacity>
-    </View>
-    <Separator />
-    <View>
-      <TouchableOpacity
-        onPress={() => navigation.navigate('Bus133')}
-        style={{ width: '100%', backgroundColor: 'white' }}>
-        <Text style={{textAlign: 'left'}}>
-          133                            警衛室|3min
-        </Text>
-        <Text style={styles.title}>往中壢公車站</Text>
-        <TouchableOpacity
-          onPress={() => Alert.alert('Left button pressed')}
-          style={{
-            width: '10%',
-            backgroundColor: 'white',
-            position: 'absolute',
-            right: 20,
-          }}>
-          <Text style={styles.title}>心</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => Alert.alert('Left button pressed')}
-          style={{
-            width: '10%',
-            backgroundColor: 'white',
-            position: 'absolute',
-            right: 20,
-            bottom: 0,
-          }}>
-          <Text style={styles.title}>加</Text>
-        </TouchableOpacity>
-      </TouchableOpacity>
-    </View>
+    ))}
     <Separator />
     </ScrollView>
   </SafeAreaView>

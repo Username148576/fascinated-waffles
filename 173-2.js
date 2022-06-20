@@ -37,7 +37,7 @@ function List173({ navigation }) {
         173公車時刻表
       </Text>
      <TouchableOpacity
-        onPress={() => navigation.navigate('Bus173')}
+        onPress={() => navigation.navigate('Bus1730')}
         style={{
           width: '30%',
           backgroundColor: '',
