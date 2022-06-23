@@ -44,7 +44,7 @@ function Bus132({ navigation }) {
 
   const onRefresh = () => {
       setRefreshing(true);
-      BusController.route(1321).then((res) => {
+      BusController.route({id:132,dir:1}).then((res) => {
         setItems(res);
         console.log();
         setRefreshing(false);
@@ -53,7 +53,7 @@ function Bus132({ navigation }) {
 
   const onRefresh1 = () => {
     setRefreshing(true);
-    BusController.route(1320).then((res) => {
+    BusController.route({id:132,dir:0}).then((res) => {
       setItems(res);
       setRefreshing(false);
     });

@@ -1,15 +1,15 @@
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import React, { useState, useEffect} from 'react';
 import {
   StyleSheet,
   View,
   SafeAreaView,
-  ScrollView,
   Text,
   Alert,
   TouchableOpacity,
+  RefreshControl,
+  ScrollView,
 } from 'react-native';
+import BusController from './bus';
 
 const styles = StyleSheet.create({
   container: {
@@ -38,6 +38,32 @@ const styles = StyleSheet.create({
 });
 const Separator = () => <View style={styles.separator} />;
 function Second({ navigation }) {
+    const [item, setItems] = useState([]);
+  
+    const [start, setStart] = useState(true);
+  
+    const [refreshing, setRefreshing] = useState(false);
+  
+  
+    const onRefresh = () => {
+        setRefreshing(true);
+        BusController.second().then((res) => {
+          setItems(res);
+          setRefreshing(false);
+        });
+    };
+  
+    useEffect(() => {
+      if(start){
+        setStart(false);
+        onRefresh();
+      }
+      var id;
+      id=setInterval(onRefresh,10000)
+      return () => {
+        clearInterval(id);
+      }
+    },[start]);
   return (
   <SafeAreaView style={styles.background}>
     <ScrollView style={styles.scrollView}>
@@ -77,163 +103,43 @@ function Second({ navigation }) {
       </View>
     </View>
     <Separator />
-    <View>
-      <TouchableOpacity
-        onPress={() => navigation.navigate('Sg')}
-        style={{ width: '100%', backgroundColor: 'white' }}>
-        <Text style={{textAlign: 'left'}}>
-          警衛室                          132|3min
-        </Text>
-        <Text style={styles.title}> 172|10min</Text>
+    {item.map((res)=>(
+      <View>
+        <View>
         <TouchableOpacity
-          onPress={() => Alert.alert('Left button pressed')}
-          style={{
-            width: '10%',
-            backgroundColor: 'white',
-            position: 'absolute',
-            right: 20,
-          }}>
-          <Text style={styles.title}>心</Text>
+          onPress={() => navigation.navigate(res.stateEn)}
+          style={{ width: '100%', backgroundColor: 'white' }}>
+          <Text style={{textAlign: 'left'}}>
+          {res.state}                          {res.route1}|{res.time1}
+          </Text>
+          <Text style={styles.title}>{res.route2}|{res.time2}</Text>
+          <TouchableOpacity
+            onPress={() => Alert.alert('Left button pressed')}
+            style={{
+              width: '10%',
+              backgroundColor: 'white',
+              position: 'absolute',
+              right: 20,
+            }}>
+            <Text style={styles.title}>心</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => Alert.alert('Left button pressed')}
+            style={{
+              width: '10%',
+              backgroundColor: 'white',
+              position: 'absolute',
+              right: 20,
+              bottom: 0,
+            }}>
+            <Text style={styles.title}>加</Text>
+          </TouchableOpacity>
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => Alert.alert('Left button pressed')}
-          style={{
-            width: '10%',
-            backgroundColor: 'white',
-            position: 'absolute',
-            right: 20,
-            bottom: 0,
-          }}>
-          <Text style={styles.title}>加</Text>
-        </TouchableOpacity>
-      </TouchableOpacity>
-    </View>
-    <Separator />
-    <View>
-      <TouchableOpacity
-        onPress={() => navigation.navigate('Library')}
-        style={{ width: '100%', backgroundColor: 'white' }}>
-        <Text style={{textAlign: 'left'}}>
-          國鼎圖書館                  132|3min{' '}
-        </Text>
-        <Text style={styles.title}> 172|10min</Text>
-        <TouchableOpacity
-          onPress={() => Alert.alert('Left button pressed')}
-          style={{
-            width: '10%',
-            backgroundColor: 'white',
-            position: 'absolute',
-            right: 20,
-          }}>
-          <Text style={styles.title}>心</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => Alert.alert('Left button pressed')}
-          style={{
-            width: '10%',
-            backgroundColor: 'white',
-            position: 'absolute',
-            right: 20,
-            bottom: 0,
-          }}>
-          <Text style={styles.title}>加</Text>
-        </TouchableOpacity>
-      </TouchableOpacity>
-    </View>
-    <Separator />
-    <View>
-      <TouchableOpacity
-        onPress={() => navigation.navigate('Lake')}
-        style={{ width: '100%', backgroundColor: 'white' }}>
-        <Text style={{textAlign: 'left'}}>
-          中大湖                         132|3min
-        </Text>
-        <Text style={styles.title}>172|10min</Text>
-        <TouchableOpacity
-          onPress={() => Alert.alert('Left button pressed')}
-          style={{
-            width: '10%',
-            backgroundColor: 'white',
-            position: 'absolute',
-            right: 20,
-          }}>
-          <Text style={styles.title}>心</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => Alert.alert('Left button pressed')}
-          style={{
-            width: '10%',
-            backgroundColor: 'white',
-            position: 'absolute',
-            right: 20,
-            bottom: 0,
-          }}>
-          <Text style={styles.title}>加</Text>
-        </TouchableOpacity>
-      </TouchableOpacity>
-    </View>
-    <Separator />
-    <View>
-      <TouchableOpacity
-        onPress={() =>navigation.navigate('Gym')}
-        style={{ width: '100%', backgroundColor: 'white' }}>
-        <Text style={{textAlign: 'left'}}>
-          依仁堂                          132|3min
-        </Text>
-        <Text style={styles.title}> 172|10min</Text>
-        <TouchableOpacity
-          onPress={() => Alert.alert('Left button pressed')}
-          style={{
-            width: '10%',
-            backgroundColor: 'white',
-            position: 'absolute',
-            right: 20,
-          }}>
-          <Text style={styles.title}>心</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => Alert.alert('Left button pressed')}
-          style={{
-            width: '10%',
-            backgroundColor: 'white',
-            position: 'absolute',
-            right: 20,
-            bottom: 0,
-          }}>
-          <Text style={styles.title}>加</Text>
-        </TouchableOpacity>
-      </TouchableOpacity>
+      </View>
       <Separator />
-      <TouchableOpacity
-        onPress={() =>navigation.navigate('Backdoor')}
-        style={{ width: '100%', backgroundColor: 'white' }}>
-        <Text style={{textAlign: 'left'}}>
-          後門                             132|3min
-        </Text>
-        <Text style={styles.title}> 172|10min</Text>
-        <TouchableOpacity
-          onPress={() => Alert.alert('Left button pressed')}
-          style={{
-            width: '10%',
-            backgroundColor: 'white',
-            position: 'absolute',
-            right: 20,
-          }}>
-          <Text style={styles.title}>心</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => Alert.alert('Left button pressed')}
-          style={{
-            width: '10%',
-            backgroundColor: 'white',
-            position: 'absolute',
-            right: 20,
-            bottom: 0,
-          }}>
-          <Text style={styles.title}>加</Text>
-        </TouchableOpacity>
-      </TouchableOpacity>
     </View>
+    ))}
+    
     <Separator />
     </ScrollView>
   </SafeAreaView>

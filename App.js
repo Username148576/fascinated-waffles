@@ -16,6 +16,7 @@ import Gym from './gym';
 import Backdoor from './backdoor';
 import Library from './library';
 import Sg from './sg';
+import Frontdoor from './frontdoor';
 import Bus173 from './173-1';
 import List173 from './173-2';
 
@@ -40,7 +41,8 @@ function App() {
         <Stack.Screen name="Gym" component={Gym} />
         <Stack.Screen name="Lake" component={Lake} />
         <Stack.Screen name="Library" component={Library}/>
-        <Stack.Screen name="Sg" component={Sg}/>
+        <Stack.Screen name="Guardroom of Central University" component={Sg}/>
+        <Stack.Screen name="The Front Door of Central University" component={Frontdoor}/>
         <Stack.Screen name="Bus173" component={Bus173}/>
         <Stack.Screen name="List173" component={List173}/>
       </Stack.Navigator>

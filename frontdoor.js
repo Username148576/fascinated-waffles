@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
   },
 });
 const Separator = () => <View style={styles.separator} />;
-function Sg({ navigation }) {
+function Frontdoor({ navigation }) {
 
   const [item, setItems] = useState([]);
 
@@ -47,7 +47,7 @@ function Sg({ navigation }) {
 
   const onRefresh = () => {
       setRefreshing(true);
-      BusController.state({id:235}).then((res) => {
+      BusController.state({id:1351}).then((res) => {
         setItems(res);
         setRefreshing(false);
       });
@@ -68,7 +68,7 @@ function Sg({ navigation }) {
     <SafeAreaView style={styles.background} refreshControl={(<RefreshControl  refreshing={refreshing} onRefresh={onRefresh} />)}>
     <View>
       <Text style={{ textAlign: 'center', backgroundColor: 'skyblue' }}>
-        警衛室
+        中央大學正門
       </Text>
       <TouchableOpacity
         onPress={() =>navigation.navigate('Second')}
@@ -113,4 +113,4 @@ function Sg({ navigation }) {
   </SafeAreaView>
 );
 }
-export default Sg;
+export default Frontdoor;

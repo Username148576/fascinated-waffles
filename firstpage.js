@@ -50,7 +50,7 @@ function First({ navigation }) {
 
   const onRefresh = () => {
       setRefreshing(true);
-      BusController.state(1).then((res) => {
+      BusController.state({id:235}).then((res) => {
         setItems(res);
         setRefreshing(false);
       });
@@ -108,10 +108,10 @@ function First({ navigation }) {
       <View>
         <View>
         <TouchableOpacity
-          onPress={() => navigation.navigate('Bus'+res.state)}
+          onPress={() => navigation.navigate('Bus'+res.route)}
           style={{ width: '100%', backgroundColor: 'white' }}>
           <Text style={{textAlign: 'left'}}>
-          {res.state}                          警衛室|{res.time}
+          {res.route}                          警衛室|{res.time}
           </Text>
           <Text style={styles.title}>{'\n'}</Text>
           <TouchableOpacity
