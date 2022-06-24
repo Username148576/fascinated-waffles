@@ -33,18 +33,17 @@ function get_busTime(data)
 
 async function state(parame)
 {
-	const APIBASE = "https://ptx.transportdata.tw/MOTC/v2/Bus/EstimatedTimeOfArrival/City/Taoyuan/PassThrough/Station"
+	const APIBASE = "https://ptx.transportdata.tw/MOTC/v2/Bus/EstimatedTimeOfArrival/City/Taoyuan/PassThrough/Station"//前面的網址
 	let data = {
-		"$select":  "StopStatus,EstimateTime,RouteName,NextBusTime",
-		"$filter":  "(RouteUID eq 'TAO3220' or RouteUID eq 'TAO133') and Direction eq 1 or (RouteUID eq 'TAO3221' or RouteUID eq 'TAO1730') and Direction eq 0",
-		"$orderby": "RouteName/En",
-		"$top": "30",
-		"$format":  "JSON",
+		"$select":  "StopStatus,EstimateTime,RouteName,NextBusTime",//要select的項目
+		"$filter":  "(RouteUID eq 'TAO3220' or RouteUID eq 'TAO133') and Direction eq 1 or (RouteUID eq 'TAO3221' or RouteUID eq 'TAO1730') and Direction eq 0",//一些限制
+		"$orderby": "RouteName/En",//由甚麼排序
+		"$top": "30",//取前面幾筆資料
+		"$format":  "JSON",//json的格式
 	}
-	let URL = url.parse( `${APIBASE}/${parame.id}`, true );
-	URL.query = data;
-	let Url=url.format(URL);
-	console.log(Url);
+	let URL = url.parse( `${APIBASE}/${parame.id}`, true );//把${APIBASE}/${parame.id}這段網址的東西分成很多參數
+	URL.query = data;//加上query項
+	let Url=url.format(URL);//把分開的東西組回網址
 	const output=[];
 	const response = await axios.get(Url, { 
 		headers: getAuthorizationHeader(),
@@ -92,7 +91,7 @@ async function route(parame){
 }
 
 async function second(){
-	station_id=[235,1351];
+	station_id=[235,1351];//一個站就生成一個網址
 	const APIBASE = "https://ptx.transportdata.tw/MOTC/v2/Bus/EstimatedTimeOfArrival/City/Taoyuan/PassThrough/Station"
 	let data = {
 		"$select":  "StopStatus,EstimateTime,RouteName,NextBusTime,StopName",
